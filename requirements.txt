@@ -1,7 +1,3 @@
-fastapi
-uvicorn[standard]
-python-multipart
+aiogram==3.13.1
 faster-whisper
 yt-dlp
-python-telegram-bot[job-queue]
-groq
