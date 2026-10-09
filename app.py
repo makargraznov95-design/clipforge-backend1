@@ -53,12 +53,9 @@ def download_video(url: str) -> str:
         "quiet": True,
         "no_warnings": True,
         "extractor_args": {
-            "youtube": {
-                "player_client": ["tv", "mweb", "android_vr"],
+            "youtubepot-bgutilhttp": {
+                "base_url": ["http://127.0.0.1:4416"]
             }
-        },
-        "http_headers": {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
         },
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
