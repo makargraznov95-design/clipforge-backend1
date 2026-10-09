@@ -13,9 +13,7 @@ os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 app = FastAPI(title="CLIPFORGE AI")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=["*"], allow_methods=["*"], allow_headers=["*"],
 )
 
 print(f"Загружаю модель {MODEL_SIZE}...")
@@ -35,9 +33,19 @@ def worker():
 def health():
     return {"ok": True, "model": MODEL_SIZE}
 
+@app.get("/api-docs")
+def api_docs():
+    return {
+        "endpoints": [
+            {"path": "/health", "method": "GET"},
+            {"path": "/api/transcribe", "method": "POST"},
+            {"path": "/api/download", "method": "POST"},
+        ]
+    }
+
 def download_video(url: str) -> str:
     file_id = str(uuid.uuid4())
-    out_tmpl = os.path.join(DOWNLOAD_DIR, file_id + ".%(ext)s")
+    out_tmpl = os.path.join(DOWNLOAD_DIR, f"{file_id}.%(ext)s")
     ydl_opts = {
         "format": "bestvideo[height<=720]+bestaudio/best[height<=720]",
         "outtmpl": out_tmpl,
@@ -46,7 +54,7 @@ def download_video(url: str) -> str:
         "no_warnings": True,
         "extractor_args": {
             "youtube": {
-                "player_client": ["tv", "mweb"],
+                "player_client": ["tv", "mweb", "android_vr"],
             }
         },
         "http_headers": {
@@ -58,7 +66,7 @@ def download_video(url: str) -> str:
             info = ydl.extract_info(url, download=True)
             return ydl.prepare_filename(info)
         except Exception as e:
-            raise HTTPException(status_code=400, detail="yt-dlp: " + str(e))
+            raise HTTPException(status_code=400, detail=f"yt-dlp: {e}")
 
 @app.post("/api/download")
 async def download_from_url(url: str = Form(...)):
@@ -66,16 +74,10 @@ async def download_from_url(url: str = Form(...)):
     if not os.path.exists(path):
         raise HTTPException(status_code=500, detail="Файл не скачан")
     def cleanup():
-        try:
-            os.unlink(path)
-        except:
-            pass
-    return FileResponse(
-        path,
-        filename=os.path.basename(path),
-        media_type="video/mp4",
-        background=BackgroundTask(cleanup)
-    )
+        try: os.unlink(path)
+        except: pass
+    return FileResponse(path, filename=os.path.basename(path),
+                        media_type="video/mp4", background=BackgroundTask(cleanup))
 
 @app.post("/api/transcribe")
 async def transcribe(file: UploadFile = File(...), language: str = Form("ru")):
@@ -84,10 +86,7 @@ async def transcribe(file: UploadFile = File(...), language: str = Form("ru")):
         path = tmp.name
     try:
         segments, info = model.transcribe(
-            path,
-            language=language or None,
-            vad_filter=True,
-            beam_size=1,
+            path, language=language or None, vad_filter=True, beam_size=1,
         )
         cues = [{"start": s.start, "end": s.end, "text": s.text.strip()} for s in segments]
         return {"language": info.language, "duration": info.duration, "cues": cues}
