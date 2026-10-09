@@ -1,0 +1,416 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<title>CLIPFORGE AI</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06070b;
+  --bg-2:#0a0c13;
+  --surface:rgba(20,23,32,.72);
+  --surface-2:rgba(28,32,44,.6);
+  --border:rgba(255,255,255,.08);
+  --border-2:rgba(255,255,255,.14);
+  --text:#eef1f8;
+  --muted:#8b93a7;
+  --muted-2:#5b6377;
+  --accent:#5eb8ff;
+  --accent-2:#2ce3c8;
+  --accent-3:#a78bfa;
+  --danger:#ff5a6a;
+  --ok:#3ddc84;
+  --shadow-lg:0 24px 64px rgba(0,0,0,.6);
+  --shadow-md:0 12px 32px rgba(0,0,0,.4);
+  --shadow-glow:0 0 40px rgba(94,184,255,.25);
+  --radius:18px;
+  --radius-sm:12px;
+  --radius-xs:10px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font:15px/1.5 'Inter',system-ui,-apple-system,sans-serif;
+  font-feature-settings:'cv02','cv03','cv04','ss01';
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  min-height:100vh;
+  position:relative;
+}
+/* Фоновые градиенты */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(900px 600px at 90% -10%,rgba(94,184,255,.18),transparent 60%),
+    radial-gradient(800px 600px at -10% 20%,rgba(167,139,250,.14),transparent 60%),
+    radial-gradient(700px 500px at 50% 110%,rgba(44,227,200,.12),transparent 60%);
+}
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:32px 32px;
+  mask-image:radial-gradient(ellipse at center,black 30%,transparent 75%);
+}
+
+.wrap{
+  position:relative;z-index:1;
+  max-width:960px;
+  margin:0 auto;
+  padding:32px 20px calc(48px + env(safe-area-inset-bottom));
+}
+
+/* Хедер */
+.hero{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.logo{
+  width:44px;height:44px;border-radius:14px;
+  background:conic-gradient(from 200deg,#5eb8ff,#2ce3c8,#a78bfa,#5eb8ff);
+  box-shadow:0 0 32px rgba(94,184,255,.5),0 0 0 1px rgba(255,255,255,.1) inset;
+  display:grid;place-items:center;flex-shrink:0;
+  animation:spin 14s linear infinite;
+}
+.logo::after{
+  content:'';width:22px;height:22px;border-radius:6px;
+  background:var(--bg);box-shadow:0 0 0 1px rgba(255,255,255,.06) inset;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.brand{font-size:23px;font-weight:800;letter-spacing:-.02em;margin:0}
+.brand b{
+  background:linear-gradient(90deg,#5eb8ff,#2ce3c8);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  font-weight:900;
+}
+.sub{color:var(--muted);font-size:13.5px;margin:2px 0 28px 58px}
+
+/* Карточки */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:20px;
+  margin-bottom:14px;
+  backdrop-filter:blur(20px) saturate(140%);
+  -webkit-backdrop-filter:blur(20px) saturate(140%);
+  box-shadow:var(--shadow-md);
+  transition:border-color .25s,transform .25s,box-shadow .25s;
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;inset:0;border-radius:var(--radius);padding:1px;
+  background:linear-gradient(180deg,rgba(255,255,255,.08),transparent 40%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;
+}
+.card:hover{border-color:var(--border-2)}
+
+.card-head{
+  display:flex;align-items:center;gap:10px;
+  font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 16px;
+}
+.num{
+  width:24px;height:24px;border-radius:8px;display:grid;place-items:center;
+  background:linear-gradient(135deg,rgba(94,184,255,.22),rgba(44,227,200,.14));
+  border:1px solid rgba(94,184,255,.3);
+  color:#8dd0ff;font-size:11px;font-weight:800;letter-spacing:0;
+}
+.card-head .tag{
+  margin-left:auto;font-size:10px;letter-spacing:.06em;font-weight:600;
+  padding:3px 8px;border-radius:999px;
+  background:rgba(61,220,132,.1);border:1px solid rgba(61,220,132,.3);
+  color:#9bf0b8;text-transform:none;
+}
+
+/* Поля */
+.field{margin-bottom:14px}
+.lbl{
+  display:block;font-size:12px;font-weight:500;color:var(--muted);
+  margin-bottom:7px;letter-spacing:.02em;
+}
+.input,.select{
+  width:100%;padding:12px 14px;
+  background:rgba(8,10,15,.7);
+  border:1px solid var(--border);
+  border-radius:var(--radius-xs);
+  color:var(--text);font:14px 'Inter',sans-serif;
+  outline:none;transition:border-color .2s,box-shadow .2s,background .2s;
+  -webkit-appearance:none;appearance:none;
+}
+.input:focus,.select:focus{
+  border-color:rgba(94,184,255,.55);
+  box-shadow:0 0 0 4px rgba(94,184,255,.12);
+  background:rgba(8,10,15,.95);
+}
+.input::placeholder{color:var(--muted-2)}
+.select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%238b93a7' d='M6 8 .7 1.4 1.4.7 6 5.9 10.6.7l.7.7z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;
+  padding-right:36px;
+}
+.url-input{
+  font:14px 'JetBrains Mono',ui-monospace,monospace;
+  letter-spacing:-.01em;
+}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.row{grid-template-columns:1fr}}
+
+/* Кнопки */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px 22px;border-radius:12px;border:none;cursor:pointer;
+  font:600 14.5px 'Inter',sans-serif;letter-spacing:-.01em;
+  background:linear-gradient(135deg,#5eb8ff,#2ce3c8);
+  color:#05131c;font-weight:800;
+  box-shadow:0 8px 24px rgba(94,184,255,.35),0 0 0 1px rgba(255,255,255,.1) inset;
+  transition:transform .15s,box-shadow .25s,opacity .2s;
+  position:relative;overflow:hidden;
+}
+.btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent,rgba(255,255,255,.3),transparent);
+  transform:translateX(-100%);transition:transform .6s;
+}
+.btn:hover:not(:disabled)::after{transform:translateX(100%)}
+.btn:hover:not(:disabled){
+  transform:translateY(-1px);
+  box-shadow:0 12px 32px rgba(94,184,255,.45),0 0 0 1px rgba(255,255,255,.15) inset;
+}
+.btn:active:not(:disabled){transform:translateY(0)}
+.btn:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}
+.btn.wide{width:100%}
+
+.btn.ghost{
+  background:rgba(255,255,255,.04);color:var(--text);
+  border:1px solid var(--border);font-weight:600;box-shadow:none;
+}
+.btn.ghost:hover:not(:disabled){background:rgba(255,255,255,.08);border-color:var(--border-2);transform:translateY(-1px)}
+
+.btn.small{padding:9px 14px;font-size:13px;border-radius:10px}
+
+/* Плеер */
+.video-box{
+  margin-top:14px;border-radius:14px;overflow:hidden;
+  background:#000;border:1px solid var(--border);
+  display:none;position:relative;
+}
+.video-box::before{
+  content:'';position:absolute;top:12px;left:12px;width:8px;height:8px;border-radius:50%;
+  background:#ff5a6a;box-shadow:0 0 8px #ff5a6a;z-index:2;animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+video{display:block;width:100%;max-height:380px;background:#000}
+
+/* Мета-инфо */
+.meta{
+  display:flex;gap:16px;flex-wrap:wrap;
+  font-size:12.5px;color:var(--muted);margin-top:12px;
+}
+.meta b{color:var(--text);font-weight:600}
+.meta .dot{display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--muted-2);margin:0 6px;vertical-align:middle}
+
+/* Прогресс */
+.bar{
+  height:8px;background:rgba(255,255,255,.05);border-radius:999px;overflow:hidden;
+  margin:14px 0;position:relative;
+}
+.bar>i{
+  display:block;height:100%;width:0;border-radius:999px;
+  background:linear-gradient(90deg,#5eb8ff,#2ce3c8,#a78bfa);
+  background-size:200% 100%;
+  transition:width .35s ease;
+  animation:flow 3s linear infinite;
+  box-shadow:0 0 16px rgba(94,184,255,.6);
+}
+@keyframes flow{to{background-position:200% 0}}
+
+.status{
+  font-size:13.5px;color:var(--muted);
+  display:flex;align-items:center;gap:8px;
+}
+.status .spinner{
+  width:14px;height:14px;border:2px solid rgba(94,184,255,.25);
+  border-top-color:#5eb8ff;border-radius:50%;
+  animation:spin .7s linear infinite;display:none;
+}
+.status.busy .spinner{display:inline-block}
+
+/* Лог */
+.log{
+  background:rgba(5,7,10,.8);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px 16px;
+  font:11.5px/1.6 'JetBrains Mono',ui-monospace,monospace;
+  color:#8dd0ff;max-height:200px;overflow-y:auto;
+  white-space:pre-wrap;word-break:break-all;
+  margin-top:16px;
+}
+.log::-webkit-scrollbar{width:6px}
+.log::-webkit-scrollbar-thumb{background:rgba(94,184,255,.3);border-radius:3px}
+
+/* Результаты */
+.results-grid{display:grid;gap:14px;margin-top:20px}
+.result{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;padding:16px;
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  box-shadow:var(--shadow-md);
+  animation:slideIn .4s cubic-bezier(.2,.9,.3,1.2);
+}
+@keyframes slideIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.result-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:12px;gap:10px;
+}
+.result-name{
+  font-weight:700;font-size:14.5px;letter-spacing:-.01em;
+  display:flex;align-items:center;gap:8px;
+}
+.result-name::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:linear-gradient(135deg,#5eb8ff,#2ce3c8);
+  box-shadow:0 0 8px rgba(94,184,255,.8);
+}
+.result-badge{
+  font-size:11px;padding:4px 10px;border-radius:999px;
+  background:rgba(61,220,132,.12);border:1px solid rgba(61,220,132,.35);
+  color:#9bf0b8;font-weight:600;letter-spacing:.02em;
+  white-space:nowrap;
+}
+.result video{margin:0 0 12px;border-radius:12px}
+.result-actions{display:flex;gap:8px;flex-wrap:wrap}
+.result-actions .btn{flex:1;min-width:140px;padding:11px 14px;font-size:13px}
+
+/* Пустое состояние */
+.empty{
+  text-align:center;padding:40px 20px;
+  color:var(--muted-2);font-size:13px;
+}
+.empty-icon{
+  width:56px;height:56px;margin:0 auto 14px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(94,184,255,.15),rgba(167,139,250,.1));
+  border:1px solid rgba(94,184,255,.2);
+  display:grid;place-items:center;font-size:24px;
+}
+
+/* Тост */
+.toast{
+  position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(100px);
+  padding:12px 20px;border-radius:12px;
+  background:rgba(20,23,32,.95);
+  border:1px solid var(--border-2);
+  backdrop-filter:blur(20px);
+  color:var(--text);font-size:13.5px;font-weight:500;
+  box-shadow:var(--shadow-lg);
+  opacity:0;transition:all .35s cubic-bezier(.2,.9,.3,1.2);
+  z-index:100;pointer-events:none;max-width:90vw;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok{border-color:rgba(61,220,132,.5)}
+.toast.err{border-color:rgba(255,90,106,.5)}
+
+/* Заголовок секции */
+.section-title{
+  font-size:15px;font-weight:700;margin:32px 0 14px;
+  letter-spacing:-.01em;
+  display:flex;align-items:center;gap:10px;
+}
+.section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+.section-title .count{
+  font-size:12px;font-weight:600;color:var(--muted);
+  padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.05);
+  border:1px solid var(--border);
+}
+
+@media(max-width:520px){
+  .wrap{padding:20px 14px calc(40px + env(safe-area-inset-bottom))}
+  .brand{font-size:20px}
+  .sub{margin-left:58px;margin-bottom:22px}
+  .card{padding:16px;border-radius:16px}
+  .logo{width:40px;height:40px}
+  .result-actions .btn{min-width:0}
+}
+</style></head><body>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="logo"></div>
+    <div>
+      <h1 class="brand">CLIPFORGE <b>AI</b></h1>
+      <div class="sub" style="margin:0">Контент-фабрика: видео → речь → субтитры → 9:16</div>
+    </div>
+  </div>
+  <div style="height:22px"></div>
+
+  <div class="card">
+    <div class="card-head"><span class="num">1</span> Источник видео <span class="tag" id="tagSrc">ожидание</span></div>
+    <div class="field">
+      <label class="lbl">Ссылка на видео (YouTube, VK, Instagram, TikTok)</label>
+      <input type="url" id="url" class="input url-input" placeholder="https://youtube.com/watch?v=...">
+    </div>
+    <button id="btnUrl" class="btn wide" disabled>⬇ Скачать видео</button>
+    <div class="video-box" id="vbox">
+      <video id="prev" controls playsinline></video>
+    </div>
+    <div class="meta" id="info" style="display:none"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><span class="num">2</span> Параметры обработки</div>
+    <div class="row">
+      <div class="field">
+        <label class="lbl">Язык речи</label>
+        <select id="lang" class="select">
+          <option value="russian">Русский</option>
+          <option value="english">English</option>
+          <option value="">Автоопределение</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="lbl">Длина клипа</label>
+        <select id="clipLen" class="select">
+          <option value="15">15 секунд</option>
+          <option value="25" selected>25 секунд</option>
+          <option value="35">35 секунд</option>
+          <option value="50">50 секунд</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label class="lbl">Количество клипов</label>
+        <select id="clipCount" class="select">
+          <option>3</option><option selected>5</option>
+          <option>10</option><option>15</option><option>20</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="lbl">Разрешение</label>
+        <select id="res" class="select">
+          <option value="720">720 × 1280 · быстро</option>
+          <option value="1080" selected>1080 × 1920 · качество</option>
+        </select>
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:0">
+      <label class="lbl">Стиль субтитров</label>
+      <select id="style" class="select">
+        <option value="bold">Bold — жирный с обводкой</option>
+        <option value="minimal">Minimal — тонкий</option>
+        <option value="yellow">Yellow — жёлтый</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><span class="num">3</span> Запуск <span class="tag" id="tagRun">готов
