@@ -47,7 +47,7 @@ def download_video(url: str) -> str:
     file_id = str(uuid.uuid4())
     out_tmpl = os.path.join(DOWNLOAD_DIR, f"{file_id}.%(ext)s")
     ydl_opts = {
-        "format": "best[height<=720]/best/bv*+ba/b",,
+        "format": "best[height<=720]/best/bv*+ba/b",
         "outtmpl": out_tmpl,
         "noplaylist": True,
         "quiet": True,
