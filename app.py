@@ -1,18 +1,16 @@
-def download_video(url: str) -> str:
-    file_id = str(uuid.uuid4())
-    out_tmpl = os.path.join(DOWNLOAD_DIR, f"{file_id}.%(ext)s")
-    ydl_opts = {
-        "format": "bestvideo[height<=720]+bestaudio/best[height<=720]",
-        "outtmpl": out_tmpl,
-        "noplaylist": True,
-        "quiet": True,
-        "no_warnings": True,
-        # --- Новые параметры для обхода защиты ---
-        "extractor_args": {
-            "youtube": {
-                "player_client": ["tv", "mweb", "android_vr"],
-                "player_skip": ["webpage", "configs"],
-            }
+import os, tempfile, uuid
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, HTMLResponse
+from starlette.background import BackgroundTask
+from faster_whisper import WhisperModel
+import yt_dlp
+
+MODEL_SIZE = os.getenv("WHISPER_MODEL", "base")
+DOWNLOAD_DIR = "/tmp/downloads"
+os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+
+app = FastAPI(title="CLIPFORGE AI")
         },
         "http_headers": {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
