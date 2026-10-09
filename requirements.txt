@@ -3,4 +3,3 @@ uvicorn[standard]
 python-multipart
 faster-whisper
 yt-dlp
-requests
