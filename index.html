@@ -2,224 +2,249 @@
 <title>CLIPFORGE AI</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <style>
-:root{--bg:#06070b;--s:rgba(20,23,32,.72);--b:rgba(255,255,255,.08);--t:#eef1f8;--m:#8b93a7;--a:#5eb8ff;--a2:#2ce3c8}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:var(--bg);color:var(--t);font:15px/1.5 system-ui,-apple-system,sans-serif;padding:16px;max-width:820px;margin:auto;min-height:100vh;padding-bottom:calc(24px + env(safe-area-inset-bottom));position:relative}
-body::before{content:'';position:fixed;inset:0;z-index:-1;background:radial-gradient(900px 600px at 90% -10%,rgba(94,184,255,.18),transparent 60%),radial-gradient(800px 600px at -10% 20%,rgba(167,139,250,.14),transparent 60%),radial-gradient(700px 500px at 50% 110%,rgba(44,227,200,.12),transparent 60%)}
-h1{font-size:22px;margin:0 0 2px;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:12px}
-.logo{width:38px;height:38px;border-radius:12px;background:conic-gradient(from 200deg,#5eb8ff,#2ce3c8,#a78bfa,#5eb8ff);display:grid;place-items:center;box-shadow:0 0 24px rgba(94,184,255,.5)}
-.logo::after{content:'';width:18px;height:18px;border-radius:5px;background:var(--bg)}
-h1 b{background:linear-gradient(90deg,#5eb8ff,#2ce3c8);-webkit-background-clip:text;background-clip:text;color:transparent}
-.sub{color:var(--m);font-size:12.5px;margin:4px 0 22px 50px}
-.card{background:var(--s);border:1px solid var(--b);border-radius:16px;padding:18px;margin-bottom:12px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 12px 32px rgba(0,0,0,.4)}
-.card h3{margin:0 0 12px;font-size:11.5px;color:var(--m);text-transform:uppercase;letter-spacing:.14em;font-weight:700;display:flex;align-items:center;gap:8px}
-.num{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(94,184,255,.22),rgba(44,227,200,.14));border:1px solid rgba(94,184,255,.3);color:#8dd0ff;font-size:11px;font-weight:800;letter-spacing:0;text-transform:none}
-label{display:block;margin:0 0 6px;color:var(--m);font-size:12.5px}
-input,select,textarea{width:100%;padding:12px 14px;background:rgba(8,10,15,.7);border:1px solid var(--b);border-radius:10px;color:var(--t);font:14px inherit;outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none}
-input:focus,select:focus,textarea:focus{border-color:rgba(94,184,255,.55);box-shadow:0 0 0 4px rgba(94,184,255,.12)}
-.url{font:14px ui-monospace,monospace}
-button{padding:13px 20px;border-radius:11px;border:none;cursor:pointer;font:700 15px inherit;background:linear-gradient(135deg,#5eb8ff,#2ce3c8);color:#05131c;box-shadow:0 8px 24px rgba(94,184,255,.35);transition:transform .15s,opacity .2s;width:100%;margin-top:8px}
-button:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}
-button:active:not(:disabled){transform:scale(.98)}
-button.ghost{background:rgba(255,255,255,.05);color:var(--t);border:1px solid var(--b);box-shadow:none;font-weight:600}
-button.tiny{padding:8px 12px;font-size:13px;width:auto;margin:0}
-.bar{height:6px;background:rgba(255,255,255,.05);border-radius:999px;overflow:hidden;margin:12px 0}
-.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#5eb8ff,#2ce3c8,#a78bfa);background-size:200% 100%;border-radius:999px;transition:width .35s ease;animation:flow 3s linear infinite;box-shadow:0 0 16px rgba(94,184,255,.6)}
-@keyframes flow{to{background-position:200% 0}}
-.muted{color:var(--m);font-size:12.5px}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-@media(max-width:520px){.row{grid-template-columns:1fr}}
-.clip{background:rgba(8,10,15,.5);border:1px solid var(--b);border-radius:10px;padding:12px;margin-bottom:8px}
-.clip .hdr{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12.5px;color:var(--m)}
-.clip .reason{font-size:12.5px;color:#8dd0ff;margin:4px 0;font-weight:600}
-.clip .text{font-size:12px;color:var(--m);line-height:1.4;max-height:50px;overflow:hidden}
-.clip input[type=number]{width:70px;display:inline-block;padding:6px 8px;font-size:12px}
-.clip .times{display:flex;gap:8px;align-items:center;margin-top:8px;font-size:12px;color:var(--m)}
-.result{background:rgba(8,10,15,.5);border:1px solid var(--b);border-radius:12px;padding:12px;margin-bottom:10px;animation:in .35s ease}
-@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.result video{width:100%;border-radius:10px;background:#000;margin-bottom:8px}
-.result .acts{display:flex;gap:8px}
-.result .acts button{flex:1;padding:10px 12px;font-size:13px;margin:0}
-.log{background:rgba(5,7,10,.85);border:1px solid var(--b);border-radius:10px;padding:12px;font:11.5px/1.55 ui-monospace,monospace;color:#8dd0ff;max-height:140px;overflow:auto;white-space:pre-wrap;margin-top:12px}
-.tag{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(61,220,132,.12);border:1px solid rgba(61,220,132,.35);color:#9bf0b8;text-transform:none;letter-spacing:.02em;margin-left:auto}
-.hidden{display:none}
+:root{--bg:#0a0b0f;--s:#12141a;--b:#232735;--t:#e8ecf3;--m:#8b93a7;--a:#3ea8ff;--a2:#2ce3c8}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:15px system-ui,sans-serif;padding:16px;max-width:900px;margin:auto;padding-bottom:calc(24px + env(safe-area-inset-bottom))}
+h1{font-size:21px;margin:0 0 4px}h1 span{background:linear-gradient(90deg,var(--a),var(--a2));-webkit-background-clip:text;color:transparent}
+.muted{color:var(--m);font-size:12px}
+.step{background:var(--s);border:1px solid var(--b);border-radius:12px;padding:14px;margin-bottom:12px}
+.step h3{margin:0 0 10px;font-size:13px;color:var(--m);text-transform:uppercase;letter-spacing:1px}
+button{background:linear-gradient(90deg,var(--a),var(--a2));color:#06121c;border:none;padding:12px 16px;border-radius:10px;font-weight:700;cursor:pointer;font-size:15px;margin:4px 6px 4px 0}
+button:disabled{opacity:.4;cursor:not-allowed}
+button.sec{background:#1b1f2a;color:var(--t);font-weight:500}
+label{display:block;margin:8px 0;color:var(--m);font-size:13px}
+select,input[type=number],input[type=text],input[type=url]{background:#0e1015;border:1px solid var(--b);color:var(--t);border-radius:8px;padding:9px 10px;font-size:14px;width:100%;margin-top:4px}
+video{width:100%;max-height:320px;border-radius:10px;background:#000;margin-top:8px;display:none}
+.info{color:var(--m);font-size:12px;margin-top:6px}
+.bar{height:6px;background:#1b1f2a;border-radius:9px;overflow:hidden;margin:10px 0}
+.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a),var(--a2));transition:width .2s}
+pre{background:#0e1015;border:1px solid var(--b);border-radius:8px;padding:10px;font-size:11px;max-height:160px;overflow:auto;white-space:pre-wrap;font-family:ui-monospace,monospace}
+.result{background:#0e1015;border:1px solid var(--b);border-radius:10px;padding:12px;margin-bottom:10px}
+.result video{max-height:400px}
+.result .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 </style></head><body>
 
-<h1><span class="logo"></span>CLIPFORGE <b>AI</b></h1>
-<div class="sub">Ссылка → транскрипт → нарезка 9:16 → «Фото»</div>
+<h1>CLIPFORGE <span>AI</span></h1>
+<div class="muted">Ссылка → речь → субтитры → вертикальный MP4 → «Фото».</div>
 
-<div class="card" id="step1">
-  <h3><span class="num">1</span> Источник</h3>
-  <label>Ссылка (YouTube, VK, Instagram, TikTok)</label>
-  <input type="url" id="url" class="url" placeholder="https://youtube.com/watch?v=...">
-  <div class="row" style="margin-top:10px">
-    <div>
-      <label>Язык речи</label>
-      <select id="lang"><option value="ru">Русский</option><option value="en">English</option><option value="">Авто</option></select>
-    </div>
-    <div>
-      <label>Стиль субтитров</label>
-      <select id="style"><option value="bold">Bold</option><option value="minimal">Minimal</option><option value="yellow">Yellow</option></select>
-    </div>
-  </div>
-  <button id="btnAnalyze" disabled>🔍 Обработать ссылку</button>
-  <div class="bar hidden" id="bar1"><i></i></div>
-  <div class="muted hidden" id="st1"></div>
+<div class="step"><h3>1. Видео по ссылке</h3>
+<label>Вставь ссылку (YouTube, VK, Instagram, TikTok):
+<input type="url" id="url" placeholder="https://youtube.com/watch?v=...">
+</label>
+<button id="btnUrl" disabled>Скачать видео</button>
+<div class="info" id="info"></div>
+<video id="prev" controls playsinline></video>
 </div>
 
-<div class="card hidden" id="step2">
-  <h3><span class="num">2</span> Найденные моменты <span class="tag" id="tag2"></span></h3>
-  <div class="muted" id="srcInfo" style="margin-bottom:12px"></div>
-  <div id="clipsList"></div>
-  <div class="row" style="margin-top:8px">
-    <div>
-      <label>Разрешение</label>
-      <select id="res"><option value="720">720×1280 (быстро)</option><option value="1080">1080×1920 (качество)</option></select>
-    </div>
-    <div>
-      <label>&nbsp;</label>
-      <button id="btnRender" style="margin:0">🎬 Создать клипы</button>
-    </div>
-  </div>
-  <div class="bar hidden" id="bar2"><i></i></div>
-  <div class="muted hidden" id="st2"></div>
+<div class="step"><h3>2. Настройки</h3>
+<label>Язык
+<select id="lang"><option value="russian">Русский</option><option value="english">English</option><option value="">Авто</option></select></label>
+<label>Длина клипа
+<select id="clipLen"><option value="15">15 сек</option><option value="25" selected>25 сек</option><option value="35">35 сек</option><option value="50">50 сек</option></select></label>
+<label>Сколько клипов
+<select id="clipCount"><option>3</option><option selected>5</option><option>10</option></select></label>
+<label>Стиль субтитров
+<select id="style"><option value="bold">Bold</option><option value="minimal">Minimal</option><option value="yellow">Yellow</option></select></label>
+<label>Разрешение
+<select id="res"><option value="720">720×1280 (быстро)</option><option value="1080" selected>1080×1920 (качество)</option></select></label>
 </div>
 
-<div class="card hidden" id="step3">
-  <h3><span class="num">3</span> Готовые клипы <span class="tag" id="tag3"></span></h3>
-  <div id="results"></div>
+<div class="step"><h3>3. Сделать</h3>
+<button id="btnGo" disabled>Найти и собрать</button>
+<div class="bar"><i id="pbar"></i></div>
+<div class="info" id="status">Ожидание ссылки.</div>
 </div>
 
-<pre class="log" id="log"></pre>
+<div id="results"></div>
+<pre id="log"></pre>
 
-<script>
+<script type="module">
+import { FFmpeg } from 'https://esm.sh/@ffmpeg/ffmpeg@0.12.10';
+import { toBlobURL, fetchFile } from 'https://esm.sh/@ffmpeg/util@0.12.1';
+
 const $=id=>document.getElementById(id);
 const log=m=>{const p=$('log');p.textContent+=m+'\n';p.scrollTop=p.scrollHeight;console.log(m)};
-const setBar=(el,v)=>{const b=$(el);b.classList.remove('hidden');b.querySelector('i').style.width=(v*100).toFixed(1)+'%'};
-const setSt=(el,t)=>{const s=$(el);s.classList.remove('hidden');s.textContent=t};
+const setP=v=>$('pbar').style.width=(100*Math.max(0,Math.min(1,v))).toFixed(1)+'%';
+const setS=t=>$('status').textContent=t;
 
-let jobId=null, plans=[], currentTask=null;
+let file=null, cues=[], clips=[], ffmpeg=null, isDownloading=false;
 
-$('url').oninput=()=>{$('btnAnalyze').disabled=!$('url').value.trim()};
+$('url').oninput=()=>{ $('btnUrl').disabled = !$('url').value.trim() || isDownloading; };
 
-$('btnAnalyze').onclick=async()=>{
-  const url=$('url').value.trim(); if(!url) return;
-  $('btnAnalyze').disabled=true;
-  $('step2').classList.add('hidden'); $('step3').classList.add('hidden');
-  $('results').innerHTML='';
-  setBar('bar1',0.05); setSt('st1','Отправка на сервер...'); log('Ссылка: '+url);
+$('btnUrl').onclick = async ()=>{
+  const url=$('url').value.trim();
+  if(!url) return;
+  isDownloading=true; $('btnUrl').disabled=true; $('btnGo').disabled=true;
+  setS('Скачивание видео...'); setP(0);
+  log('Скачивание: '+url);
   try{
-    const fd=new FormData(); fd.append('url',url); fd.append('language',$('lang').value);
-    const r=await fetch('/api/prepare',{method:'POST',body:fd});
-    if(!r.ok) throw new Error('Ошибка: '+r.status+' '+await r.text());
-    const {task_id}=await r.json();
-    log('Task: '+task_id);
-    await poll(task_id,(st)=>{
-      if(st.status==='downloading'){setBar('bar1',Math.max(0.15,st.progress/100)); setSt('st1','Скачиваю видео на сервер...')}
-      else if(st.status==='transcribing'){setBar('bar1',0.6); setSt('st1','Распознаю речь (это долго)...')}
-    });
-    const r2=await fetch('/api/job/'+task_id); const j=await r2.json();
-    if(j.status==='error') throw new Error(j.error||'Ошибка');
-    setBar('bar1',1); setSt('st1','Готово');
-    showPlans(j.data);
-  }catch(e){ log('ОШИБКА: '+(e.message||e)); setSt('st1','Ошибка'); }
-  finally{ $('btnAnalyze').disabled=false; }
-};
-
-async function poll(taskId, onTick){
-  while(true){
-    await new Promise(r=>setTimeout(r,2000));
-    const r=await fetch('/api/job/'+taskId);
-    if(!r.ok) throw new Error('poll '+r.status);
-    const j=await r.json();
-    onTick && onTick(j);
-    if(j.status==='done' || j.status==='error') return j;
-  }
-}
-
-function showPlans(data){
-  jobId=data.job_id; plans=data.plans||[];
-  $('step2').classList.remove('hidden');
-  $('tag2').textContent=plans.length+' шт.';
-  $('srcInfo').innerHTML=`<b>${(data.title||'').slice(0,60)}</b> · ${Math.round(data.duration)}с · язык: ${data.language||'?'}`;
-  const box=$('clipsList'); box.innerHTML='';
-  if(!plans.length){ box.innerHTML='<div class="muted">Моменты не найдены. Настрою по сетке.</div>'; return; }
-  plans.forEach((p,i)=>{
-    const d=document.createElement('div'); d.className='clip';
-    d.innerHTML=`<div class="hdr"><span>Клип ${i+1}</span><span>${(p.end-p.start).toFixed(1)} сек</span></div>
-      <div class="reason">${p.reason}</div>
-      <div class="text">${(p.text||'').replace(/</g,'&lt;')}</div>
-      <div class="times"><label style="margin:0">Начало:</label><input type="number" step="0.1" data-i="${i}" data-k="start" value="${p.start.toFixed(1)}">
-        <label style="margin:0">Конец:</label><input type="number" step="0.1" data-i="${i}" data-k="end" value="${p.end.toFixed(1)}"></div>`;
-    box.appendChild(d);
-  });
-  box.querySelectorAll('input[type=number]').forEach(inp=>{
-    inp.oninput=()=>{const i=+inp.dataset.i; plans[i][inp.dataset.k]=parseFloat(inp.value)||0};
-  });
-  $('step2').scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-$('btnRender').onclick=async()=>{
-  if(!jobId || !plans.length) return;
-  $('btnRender').disabled=true;
-  $('step3').classList.remove('hidden'); $('results').innerHTML='';
-  setBar('bar2',0.02); setSt('st2','Запуск рендера...'); log('Рендер '+plans.length+' клипов...');
-  try{
-    const [w,h] = $('res').value==='1080' ? [1080,1920] : [720,1280];
-    const fd=new FormData();
-    fd.append('job_id',jobId);
-    fd.append('clips_json',JSON.stringify(plans.map(p=>({start:p.start,end:p.end}))));
-    fd.append('style',$('style').value);
-    fd.append('width',w); fd.append('height',h);
-    const r=await fetch('/api/render',{method:'POST',body:fd});
-    if(!r.ok) throw new Error(await r.text());
-    const {task_id}=await r.json();
-    log('Render task: '+task_id);
-    const final=await poll(task_id,(j)=>{
-      setBar('bar2',Math.max(0.05,j.progress/100));
-      setSt('st2',j.status+' · '+j.progress+'%');
-    });
-    if(final.status==='error') throw new Error(final.error||'render error');
-    setBar('bar2',1); setSt('st2','Готово');
-    $('tag3').textContent=final.files.length+' шт.';
-    renderResults(final.files);
-  }catch(e){ log('ОШИБКА рендера: '+(e.message||e)); setSt('st2','Ошибка'); }
-  finally{ $('btnRender').disabled=false; }
-};
-
-function renderResults(files){
-  const box=$('results'); box.innerHTML='';
-  files.forEach((f,i)=>{
-    const d=document.createElement('div'); d.className='result';
-    d.innerHTML=`<div class="muted" style="margin-bottom:6px">${f.name} · ${(f.size/1048576).toFixed(2)} МБ · ${(f.end-f.start).toFixed(1)} сек</div>
-      <video controls playsinline preload="metadata" src="${f.url}"></video>
-      <div class="acts">
-        <button data-act="share">📤 В Фото</button>
-        <button class="ghost" data-act="dl">⬇ Файлы</button>
-      </div>`;
-    d.querySelector('[data-act=share]').onclick=async()=>{
-      try{
-        const blob=await (await fetch(f.url)).blob();
-        const file=new File([blob],f.name,{type:'video/mp4'});
-        if(navigator.canShare && navigator.canShare({files:[file]})){
-          await navigator.share({files:[file],title:f.name});
-          log('Шер-шит открыт: '+f.name);
-        } else {
-          download(f.url,f.name); log('Share недоступен, скачал в Файлы');
-        }
-      }catch(e){ log('share ошибка: '+(e.message||e)); download(f.url,f.name); }
+    const fd=new FormData(); fd.append('url', url);
+    const r=await fetch('/api/download',{method:'POST',body:fd});
+    if(!r.ok){ throw new Error('Сервер: '+r.status+' '+await r.text()); }
+    const blob=await r.blob();
+    file=new File([blob],'video.mp4',{type:'video/mp4'});
+    $('info').textContent=`Скачано: ${(file.size/1048576).toFixed(1)} МБ`;
+    const v=$('prev'); v.src=URL.createObjectURL(blob); v.style.display='block';
+    v.onloadedmetadata=()=>{
+      $('info').textContent+=` — ${v.duration.toFixed(1)} сек`;
+      $('btnGo').disabled=false;
+      log(`Видео скачано (${v.duration.toFixed(1)} сек)`);
+      setS('Видео готово. Нажми «Найти и собрать».');
     };
-    d.querySelector('[data-act=dl]').onclick=()=>download(f.url,f.name);
-    box.appendChild(d);
+  }catch(e){
+    log('ОШИБКА: '+(e?.message||e));
+    setS('Не удалось скачать видео.');
+  }finally{
+    isDownloading=false;
+    $('btnUrl').disabled=!$('url').value.trim();
+  }
+};
+
+async function ensureFF(){
+  if(ffmpeg) return ffmpeg;
+  setS('Загрузка FFmpeg...'); log('FFmpeg загрузка...');
+  ffmpeg=new FFmpeg();
+  ffmpeg.on('log',({message})=>{ if(/error|Error|Invalid|failed/i.test(message)) log('ffmpeg: '+message); });
+  const b='https://unpkg.com/@ffmpeg/core@0.12.10/dist/esm';
+  await ffmpeg.load({
+    coreURL: await toBlobURL(b+'/ffmpeg-core.js','text/javascript'),
+    wasmURL: await toBlobURL(b+'/ffmpeg-core.wasm','application/wasm'),
+    classWorkerURL: location.origin+'/worker.js',
   });
-  $('step3').scrollIntoView({behavior:'smooth',block:'start'});
+  try{
+    log('Шрифт...');
+    const fBlob=await (await fetch('https://cdn.jsdelivr.net/npm/dejavu-fonts-ttf@2.37.3/ttf/DejaVuSans-Bold.ttf')).blob();
+    await ffmpeg.writeFile('font.ttf', new Uint8Array(await fBlob.arrayBuffer()));
+  }catch(e){ log('Шрифт: '+e.message); }
+  log('FFmpeg OK');
+  return ffmpeg;
 }
 
-function download(url,name){
+async function runAsr(){
+  setS('Распознавание речи...'); setP(0.2);
+  const fd=new FormData();
+  fd.append('file', file);
+  const langMap={russian:'ru',english:'en','':'auto'};
+  fd.append('language', langMap[$('lang').value]||'auto');
+  log('Отправка на бэкенд...');
+  const r=await fetch('/api/transcribe',{method:'POST',body:fd});
+  if(!r.ok){ throw new Error('Бэкенд: '+r.status+' '+await r.text()); }
+  const j=await r.json();
+  cues=(j.cues||[]).map(c=>({start:c.start,end:c.end,text:c.text}));
+  log(`Распознано: ${cues.length} фраз (${j.language}, ${j.duration.toFixed(1)} сек)`);
+  setP(0.7);
+  return cues;
+}
+
+function analyze(dur,minLen,maxLen,count){
+  const wins=[];
+  if(cues.length){
+    for(let i=0;i<cues.length;i++){
+      let start=cues[i].start, end=start, text='', j=i;
+      while(j<cues.length && (end-start)<maxLen){
+        text+=(text?' ':'')+cues[j].text; end=cues[j].end;
+        if((end-start)>=minLen && /[.!?…]$/.test(cues[j].text.trim())) break;
+        j++;
+      }
+      const len=end-start;
+      if(len<minLen || len>maxLen+3) continue;
+      wins.push({start:Math.max(0,start-0.15),end:Math.min(dur,end+0.15),text,score:scoreText(text)});
+    }
+  }
+  if(!wins.length){
+    const step=Math.max(minLen, dur/(count*2));
+    for(let t=0;t+minLen<=dur;t+=step) wins.push({start:t,end:Math.min(dur,t+minLen),text:'',score:0.1});
+  }
+  const sorted=wins.sort((a,b)=>b.score-a.score);
+  const picked=[];
+  for(const w of sorted){
+    if(picked.length>=count) break;
+    if(!picked.some(p=>{const o=Math.max(0,Math.min(p.end,w.end)-Math.max(p.start,w.start));const u=Math.min(p.end-p.start,w.end-w.start);return u && o/u>0.4;})) picked.push(w);
+  }
+  return picked.sort((a,b)=>a.start-b.start);
+}
+function scoreText(t){const l=t.toLowerCase();let s=0;if(/[!?]/.test(t))s+=0.6;if(/почему|как|что|когда|зачем|кто/.test(l))s+=0.5;if(/главное|представь|интересн|смешн|удивительн|секрет|шок/.test(l))s+=0.8;if(/ха-ха|хаха|смех|лол|прикол/.test(l))s+=0.6;return s;}
+
+async function renderClip(i, clip){
+  const W=+$('res').value; const H=Math.round(W*16/9);
+  const dur=clip.end-clip.start;
+  const base=`scale=${W}:${H}:force_original_aspect_ratio=increase,crop=${W}:${H}`;
+  const st=$('style').value;
+  const stMap={bold:{color:'white',bw:5,bc:'black',fs:Math.round(W*0.06),y:`h-th-${Math.round(H*0.14)}`},minimal:{color:'white',bw:2,bc:'black@0.6',fs:Math.round(W*0.052),y:`h-th-${Math.round(H*0.12)}`},yellow:{color:'#ffea00',bw:5,bc:'#12002b',fs:Math.round(W*0.067),y:`h-th-${Math.round(H*0.14)}`}}[st];
+  const esc=t=>t.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/:/g,'\\:').replace(/%/g,'\\%').replace(/,/g,'\\,');
+  const draws=[];
+  for(const c of cues){
+    const s=Math.max(0,c.start-clip.start), e=Math.min(dur,c.end-clip.start);
+    if(e<=0||s>=dur||!c.text) continue;
+    const words=c.text.split(/\s+/); const lines=[]; let cur='';
+    for(const w of words){ if((cur+' '+w).trim().length<=22) cur=(cur+' '+w).trim(); else {lines.push(cur); cur=w;} }
+    if(cur) lines.push(cur);
+    const text=lines.slice(0,2).join('\\n');
+    draws.push(`drawtext=fontfile=font.ttf:text='${esc(text)}':fontsize=${stMap.fs}:fontcolor=${stMap.color}:borderw=${stMap.bw}:bordercolor=${stMap.bc}:x=(w-text_w)/2:y=${stMap.y}:enable='between(t\\,${s.toFixed(2)}\\,${e.toFixed(2)})'`);
+  }
+  const vf=base+(draws.length?','+draws.join(','):'');
+  const args=['-hide_banner','-ss',String(clip.start),'-t',String(dur),'-i','src.mp4','-vf',vf,'-c:v','mpeg4','-qscale:v','4','-pix_fmt','yuv420p','-c:a','aac','-b:a','128k','-movflags','+faststart','-y','o'+i+'.mp4'];
+  await ffmpeg.exec(args);
+  const data=await ffmpeg.readFile('o'+i+'.mp4');
+  const blob=new Blob([data.buffer],{type:'video/mp4'});
+  try{ await ffmpeg.deleteFile('o'+i+'.mp4'); }catch{}
+  return blob;
+}
+
+async function saveToPhotos(blob, name){
+  const f=new File([blob], name, {type:'video/mp4'});
+  if(navigator.canShare && navigator.canShare({files:[f]})){
+    try{ await navigator.share({files:[f], title:name}); return true; }
+    catch(e){ if(e.name==='AbortError') return true; }
+  }
+  const url=URL.createObjectURL(blob);
   const a=document.createElement('a'); a.href=url; a.download=name; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url), 60000);
+  return false;
 }
 
-log('Готов. Вставь ссылку.');
+$('btnGo').onclick=async()=>{
+  if(!file) return;
+  $('btnGo').disabled=true; setP(0); $('results').innerHTML='';
+  try{
+    await ensureFF();
+    try{ await ffmpeg.readFile('src.mp4'); }
+    catch{ await ffmpeg.writeFile('src.mp4', await fetchFile(file)); }
+
+    await runAsr();
+    const dur=$('prev').duration||0;
+    const len=+$('clipLen').value;
+    const count=+$('clipCount').value;
+    clips=analyze(dur, Math.max(8,len-8), len+8, count);
+    log(`Клипов: ${clips.length}`);
+    setS(`Рендер ${clips.length} клипов...`);
+
+    for(let i=0;i<clips.length;i++){
+      setP(0.7+0.28*(i/clips.length));
+      setS(`Рендер ${i+1}/${clips.length}...`);
+      const blob=await renderClip(i, clips[i]);
+      const name=`CLIPFORGE_${String(i+1).padStart(2,'0')}.mp4`;
+      addResult(name, blob, clips[i]);
+      log(`  ${name} — ${(blob.size/1048576).toFixed(2)} МБ`);
+    }
+    setP(1); setS('Готово.');
+  }catch(e){ log('ОШИБКА: '+(e?.message||e)); setS('Ошибка.'); console.error(e); }
+  finally{ $('btnGo').disabled=false; }
+};
+
+function addResult(name, blob, clip){
+  const url=URL.createObjectURL(blob);
+  const d=document.createElement('div'); d.className='result';
+  d.innerHTML=`<div><b>${name}</b> <span class="muted">· ${clip.start.toFixed(1)}–${clip.end.toFixed(1)} сек · ${(blob.size/1048576).toFixed(2)} МБ</span></div>
+    <video controls playsinline src="${url}"></video>
+    <div class="row">
+      <button data-act="share">📤 Сохранить в Фото</button>
+      <button class="sec" data-act="dl">⬇ В «Файлы»</button>
+    </div>`;
+  d.querySelector('[data-act=share]').onclick=()=>saveToPhotos(blob, name);
+  d.querySelector('[data-act=dl]').onclick=()=>{ const a=document.createElement('a'); a.href=url; a.download=name; a.click(); };
+  $('results').prepend(d);
+}
+
+log('Готово. Вставь ссылку.');
 </script></body></html>
