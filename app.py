@@ -47,7 +47,7 @@ def download_video(url: str) -> str:
     file_id = str(uuid.uuid4())
     out_tmpl = os.path.join(DOWNLOAD_DIR, f"{file_id}.%(ext)s")
 
-    # Копируем cookies в writable-место (иначе yt-dlp не может их обновить)
+    # Копируем cookies в writable-место
     cookies_src = "/app/youtube-cookies.txt"
     cookies_tmp = f"/tmp/cookies_{file_id}.txt"
     if os.path.exists(cookies_src):
@@ -61,7 +61,8 @@ def download_video(url: str) -> str:
         "noplaylist": True,
         "quiet": True,
         "no_warnings": True,
-        "js_runtimes": ["node"],
+        "js_runtimes": {"node": {}},
+        "remote_components": ["ejs:github"],
         "extractor_args": {
             "youtube": {
                 "player_client": ["tv", "mweb", "android_vr"],
