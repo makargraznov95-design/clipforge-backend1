@@ -3,3 +3,5 @@ uvicorn[standard]
 python-multipart
 faster-whisper
 yt-dlp
+python-telegram-bot[job-queue]
+groq
