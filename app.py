@@ -1,4 +1,4 @@
-import os, tempfile, uuid
+import os, tempfile, uuid, shutil
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse
@@ -46,28 +46,46 @@ def api_docs():
 def download_video(url: str) -> str:
     file_id = str(uuid.uuid4())
     out_tmpl = os.path.join(DOWNLOAD_DIR, f"{file_id}.%(ext)s")
+
+    # Копируем cookies в writable-место (иначе yt-dlp не может их обновить)
+    cookies_src = "/app/youtube-cookies.txt"
+    cookies_tmp = f"/tmp/cookies_{file_id}.txt"
+    if os.path.exists(cookies_src):
+        shutil.copy(cookies_src, cookies_tmp)
+    else:
+        cookies_tmp = None
+
     ydl_opts = {
         "format": "best[height<=720]/best/bv*+ba/b",
         "outtmpl": out_tmpl,
         "noplaylist": True,
         "quiet": True,
         "no_warnings": True,
-        "cookiefile": "/app/youtube-cookies.txt",
+        "js_runtimes": ["node"],
         "extractor_args": {
             "youtube": {
-                "player_client": ["tv", "mweb", "web"],
+                "player_client": ["tv", "mweb", "android_vr"],
             }
         },
         "http_headers": {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
         },
     }
+    if cookies_tmp:
+        ydl_opts["cookiefile"] = cookies_tmp
+
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         try:
             info = ydl.extract_info(url, download=True)
             return ydl.prepare_filename(info)
         except Exception as e:
             raise HTTPException(status_code=400, detail=f"yt-dlp: {e}")
+        finally:
+            if cookies_tmp and os.path.exists(cookies_tmp):
+                try:
+                    os.unlink(cookies_tmp)
+                except:
+                    pass
 
 @app.post("/api/download")
 async def download_from_url(url: str = Form(...)):
